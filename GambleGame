@@ -1,0 +1,255 @@
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <fstream>
+using namespace std;
+
+// Global variables
+string name;                            // player’s name
+double balance = 0;                     // available credit
+const double MAX_ALLOWED = 20;          // maximum amount of credits to be added
+int REWARDED_MONEY = 2;                 // reward money
+int correctGuesses = 0;                 // number of times the player guessed the number correctly
+int missedGuesses = 0;                  // number of times the player guessed the number incorrectly
+int gamesPlayed;                        // Global variable for Option 3 and 4
+int totalReward = 0;
+int moneyLost = 0;
+int COST = 1;
+
+
+// Prototypes
+void AHA(); void MainMenu(); void PlayerStat();
+void NameDataBase();
+void Option1(); void Option2(); void Option3();
+void Option4(); void Option5(); void Option6();
+
+
+
+// ******** The main function ********
+int main()
+{
+    cout << "Please tell us your name : \n";
+    cin >> name;
+    system("Color 0C");
+    NameDataBase();
+
+    AHA();
+    return 0;
+}
+
+
+// ******** The primary program *******
+void AHA()
+{
+    system("clear");
+    int choice;                           // coice of the player
+    MainMenu();
+    cin >> choice;
+
+    switch (choice)
+    {
+    case 1: Option1();
+        break;
+    case 2:
+        Option2();
+        break;
+    case 3: Option3();
+        break;
+    case 4: Option4();
+        break;
+    case 5: Option5();
+        break;
+    case 6: Option6();
+        break;
+    default: cout << "Error! " << endl;
+    }
+}
+
+
+// ******** The main menu ********
+void MainMenu()
+{
+    cout << "Please select one of the following:" << endl << endl;
+    cout << "\t1: Display my available credit" << endl;
+    cout << "\t2: Add credits to my account" << endl;
+    cout << "\t3: Play The Guessing Game" << endl;
+    cout << "\t4: Display My Statistics" << endl;
+    cout << "\t5: Save My Statistics" << endl;
+    cout << "\t6: To exit" << endl;
+}
+
+
+// ******** Option 1 ********
+void Option1()
+{
+    cout << "=>Your available balance is: $" << balance << endl;
+    system("Pause");
+    AHA();
+}
+
+
+// ******** Option 2 ********
+void Option2()
+{
+    double amount = 0;                      // amount of credits entered by the player
+    cout << "=>Please enter the amount you would like to add: " << endl;
+    cin >> amount;
+    while (amount > MAX_ALLOWED || amount < 0)
+    {
+        cout << "=>Error: Maximum allowable credit is $20.00." << endl << endl;
+        cout << "=>Please enter a different amount and try again." << endl;
+        cin >> amount;
+    }
+    balance += amount;
+    cout << "=> Your new balance : " << amount << endl << endl;
+    system("Pause");
+
+    AHA();
+}
+
+
+// ******** Option 3 ********
+void Option3()
+{
+    int correctNumber;                      // correct answer of the question
+    int number;                             // number guessed by the player
+    char answer;                            // choice of the player
+                      // number of times the player has played
+
+    cout << "This game will cost $1 to play.\n";
+
+    if (balance < 1)
+    {
+        cout << "Balance is less than $1. Do you want to add to your balance ? <Y or N> ";
+        cin >> answer;
+        if (answer == 'Y' or answer == 'y')
+            Option2();
+        else
+            AHA();
+    }
+    else
+    {
+        do
+        {
+            gamesPlayed++;
+            correctNumber = rand() % 10;    // Generate a new random number
+            cout << "Please guess a number from 0 - 9: " << endl;
+            cin >> number;
+
+            if (number == correctNumber)
+            {
+                balance--;
+                cout << "Congratulations! You win $ " << REWARDED_MONEY << " dollars!" << endl;
+                balance += REWARDED_MONEY;
+                correctGuesses++;
+                totalReward += REWARDED_MONEY;
+            }
+            else
+            {
+                balance--;
+                cout << "Sorry. Your answer is " << number << ". The correct answer is " << correctNumber << endl;
+                missedGuesses++;
+                moneyLost = gamesPlayed - totalReward;
+            }
+
+            if (balance < 1)
+            {
+                answer = 'N';
+                cout << "Balance is less than $1. Do you want to add to your balance ? <Y or N> ";
+                cin >> answer;
+                if (answer == 'Y' or answer == 'y')
+                    Option2();
+            }
+            else
+            {
+            cout << "Do you want to play again? < Y / N >" << endl;
+            cin >> answer;
+            }
+        } while (answer == 'Y' || answer == 'y');
+        AHA();
+    }
+}
+
+
+// ******** Option 4 ********
+void Option4()
+{
+
+    string yes;
+    cout << "You entered 4: Display My Statistics" << endl;
+    cout << __TIMESTAMP__ << endl;
+    cout << "Players Name : " << name << endl;
+    cout << "available credit : " << balance << endl;
+    cout << "Games played : " << gamesPlayed << endl;
+    cout << "Correct Guesses: " << correctGuesses << endl;
+    cout << "Missed Guesses: " << missedGuesses << endl;
+    cout << "Money you won: " << totalReward << endl;
+    cout << "Money you lost : " << moneyLost << endl;
+    cout << endl << endl << endl;
+    cout << "Do you want to continue to main menu? " << endl;
+    cin >> yes;
+    if (yes == "yes") {
+        AHA();
+    }
+    else if (yes == "no") {
+        cout << "Please choose yes or no to cloe the game.";
+        cin >> yes;
+        if (yes == "yes" && "YES")
+        {
+            AHA();
+        }
+        if (yes == "no" && "NO") {
+            exit;
+        }
+
+    }
+}
+
+
+// ******** Option 5 ********
+void Option5()
+{
+    cout << "You entered 5: Save My Statistics" << endl;
+    PlayerStat();
+    system("Pause");
+    
+    AHA();
+}
+
+
+// ******** Option 6 ********
+void Option6()
+{
+    cout << "Thank you for using AHA software. Good bye!" << endl;
+}
+
+void NameDataBase() {
+    fstream NDB;
+    NDB.open("Names.txt");
+
+    NDB << name;
+
+}
+void PlayerStat() {
+
+
+    fstream player;
+    player.open("player.txt");
+
+    player << __TIMESTAMP__ << endl;
+    player  << "Players Name : " << name << endl;
+    player  << "available credit : " << balance << endl;
+    player  << "Games played : " << gamesPlayed << endl;
+    player  << "Correct Guesses: " << correctGuesses << endl;
+    player  << "Missed Guesses: " << missedGuesses << endl;
+    player  << "Money you won: " << totalReward << endl;
+    player  << "Money you lost : " << moneyLost << endl;
+    player  << endl << endl << endl << endl;
+    cout  << name << endl;
+    cout  << "Thank you for playing " << name << endl;
+    cout  << "The player balance is: " << balance << endl;
+    cout  << __TIMESTAMP__ << endl;
+
+    player.close();
+}
